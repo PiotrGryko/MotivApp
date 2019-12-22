@@ -10,6 +10,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.PhotosfragmentBinding
 import dagger.*
 import dagger.android.*
 import dagger.android.support.*
@@ -17,6 +18,8 @@ import javax.inject.*
 import kotlinx.android.synthetic.main.photosfragment.*
 
 public class PhotosFragment : Fragment() {
+
+    private lateinit var photosfragmentBinding: PhotosfragmentBinding
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -50,16 +53,16 @@ public class PhotosFragment : Fragment() {
         super.onCreate(savedInstanceState)
         AndroidSupportInjection.inject(this)
     } override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
-        val v: View = inflater.inflate(R.layout.photosfragment, parent, false)
+        photosfragmentBinding = PhotosfragmentBinding.inflate(inflater)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(activity!!.getSupportFragmentManager())
         navigationController = NavigationController(activity!!)
-        linearlayout00 = v.findViewById<LinearLayout>(R.id.linearlayout00)
-        tablayout10 = v.findViewById<TabLayout>(R.id.tablayout10)
-        viewpager11 = v.findViewById<ViewPager>(R.id.viewpager11)
+        linearlayout00 = photosfragmentBinding.linearlayout00
+        tablayout10 = photosfragmentBinding.tablayout10
+        viewpager11 = photosfragmentBinding.viewpager11
 
         viewpager11.setAdapter(photosPagerAdapter)
         goRestApi.getPhotosList(object : com.motiv.piotr.OnResponseListener<com.motiv.piotr.PhotosListResponse> {
@@ -69,6 +72,6 @@ public class PhotosFragment : Fragment() {
             } 
         })
 
-        return v
+        return photosfragmentBinding.getRoot()
     }
 }
