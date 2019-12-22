@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/UsersListFragment">
+    <fragment
+        android:id="@+id/UsersListFragment"
+        android:name="com.motiv.piotr.UsersListFragment"
+        android:label="activity"
+        tools:layout="@layout/userslistfragment">
+        
+        </fragment><fragment
+        android:id="@+id/PostsListFragment"
+        android:name="com.motiv.piotr.PostsListFragment"
+        android:label="activity"
+        tools:layout="@layout/postslistfragment">
+        
+        </fragment><fragment
+        android:id="@+id/PhotosFragment"
+        android:name="com.motiv.piotr.PhotosFragment"
+        android:label="activity"
+        tools:layout="@layout/photosfragment">
+        
+        </fragment><fragment
+        android:id="@+id/UsersListFragment"
+        android:name="com.motiv.piotr.UsersListFragment"
+        android:label="activity"
+        tools:layout="@layout/userslistfragment">
+        
+        </fragment><activity
+        android:id="@+id/DashboardActivity"
+        android:name="com.motiv.piotr.DashboardActivity"
+        android:label="activity"
+        tools:layout="@layout/dashboardactivity"/><activity
+        android:id="@+id/MainActivity"
+        android:name="com.motiv.piotr.MainActivity"
+        android:label="activity"
+        tools:layout="@layout/mainactivity"/><activity
+        android:id="@+id/UserDetailActivity"
+        android:name="com.motiv.piotr.UserDetailActivity"
+        android:label="activity"
+        tools:layout="@layout/userdetailactivity"/><activity
+        android:id="@+id/PostDetailsActivity"
+        android:name="com.motiv.piotr.PostDetailsActivity"
+        android:label="activity"
+        tools:layout="@layout/postdetailsactivity"/><activity
+        android:id="@+id/BottomNavigationActivity"
+        android:name="com.motiv.piotr.BottomNavigationActivity"
+        android:label="activity"
+        tools:layout="@layout/bottomnavigationactivity"/><activity
+        android:id="@+id/ViewPagerActivity"
+        android:name="com.motiv.piotr.ViewPagerActivity"
+        android:label="activity"
+        tools:layout="@layout/viewpageractivity"/>
+</navigation>
