@@ -10,20 +10,23 @@ import androidx.fragment.app.*;
 import androidx.recyclerview.widget.*;
 import androidx.recyclerview.widget.RecyclerView;
 import com.motiv.piotr.dao.DaoRepository;
-import com.motiv.piotr.dao.DaoRepositoryFactory;
 import com.motiv.piotr.dao.LocalStorage;
-import com.motiv.piotr.databinding.PostslistfragmentBinding;
+import dagger.*;
+import dagger.android.*;
+import dagger.android.support.*;
+import javax.inject.*;
 
-public class PostsListFragment extends Fragment {
+public class PostsListFragment extends Fragment implements PostsListFragmentContract.View {
 
-    private PostslistfragmentBinding postslistfragmentBinding;
+    @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
+    private PostsListFragmentContract.Presenter presenter;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
     private PhotosPagerAdapter photosPagerAdapter;
     private FragmentsPagerAdapter fragmentsPagerAdapter;
-    private GoRestApi goRestApi;
-    private DaoRepository daoRepository;
-    private LocalStorage localStorage;
+    @Inject GoRestApi goRestApi;
+    @Inject DaoRepository daoRepository;
+    @Inject LocalStorage localStorage;
     private NavigationController navigationController;
     private LinearLayout linearlayout00;
     private RecyclerView recyclerview10;
@@ -32,9 +35,9 @@ public class PostsListFragment extends Fragment {
     public View onCreateView(
             LayoutInflater inflater,
             @Nullable ViewGroup parent,
-            @Nullable Bundle savedInstanceState) {
+            final @Nullable Bundle savedInstanceState) {
 
-        postslistfragmentBinding = PostslistfragmentBinding.inflate(inflater);
+        View v = inflater.inflate(R.layout.postslistfragment, parent, false);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -42,36 +45,43 @@ public class PostsListFragment extends Fragment {
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(
                         PostsListFragment.this.getActivity().getSupportFragmentManager());
-        daoRepository = DaoRepositoryFactory.getInstance(PostsListFragment.this.getActivity());
-        localStorage = LocalStorage.getInstance(PostsListFragment.this.getActivity());
         navigationController = new NavigationController(PostsListFragment.this.getActivity());
-        goRestApi = GoRestApiFactory.getInstance(localStorage);
-        linearlayout00 = postslistfragmentBinding.linearlayout00;
-        recyclerview10 = postslistfragmentBinding.recyclerview10;
+        linearlayout00 = (LinearLayout) v.findViewById(R.id.linearlayout00);
+        recyclerview10 = (RecyclerView) v.findViewById(R.id.recyclerview10);
+        presenter =
+                new PostsListFragmentPresenter(
+                        PostsListFragment.this, goRestApi, daoRepository, localStorage);
 
         recyclerview10.setLayoutManager(
                 new LinearLayoutManager(PostsListFragment.this.getActivity()));
 
         recyclerview10.setAdapter(postsListAdapter);
         ;
-        goRestApi.getPostsList(
-                new com.motiv.piotr.OnResponseListener<com.motiv.piotr.PostsListResponse>() {
-                    @Override
-                    public void onSuccess(com.motiv.piotr.PostsListResponse argument0) {
-                        postsListAdapter.setData(argument0.getResult());
-                    }
-
-                    @Override
-                    public void onError(Exception argument0) {}
-                });
+        presenter.goRestApigetPostsList();
         postsListAdapter.setOnItemClickListener(
                 new com.motiv.piotr.PostsListAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int argument0, com.motiv.piotr.Post argument1) {
-                        navigationController.startPostDetailsActivity(argument1);
+                        presenter.eloonItemClick(argument0, argument1);
                     }
                 });
 
-        return postslistfragmentBinding.getRoot();
+        return v;
+    }
+
+    @Override
+    public void postsListAdaptersetData(java.util.List<com.motiv.piotr.Post> arg0) {
+        postsListAdapter.setData(arg0);
+    }
+
+    @Override
+    public void navigationControllerstartPostDetailsActivity(com.motiv.piotr.Post arg0) {
+        navigationController.startPostDetailsActivity(arg0);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AndroidSupportInjection.inject(this);
     }
 }

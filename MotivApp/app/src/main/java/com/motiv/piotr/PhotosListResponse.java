@@ -1,31 +1,26 @@
 package com.motiv.piotr;
 
-import android.widget.ImageView;
 import androidx.annotation.NonNull;
-import androidx.databinding.BindingAdapter;
-import androidx.room.*;
+import androidx.fragment.app.*;
 import com.google.gson.*;
 import com.google.gson.annotations.*;
 import com.google.gson.reflect.*;
-import com.squareup.picasso.Picasso;
+import dagger.*;
+import dagger.android.*;
+import dagger.android.support.*;
+import io.realm.*;
 import java.util.*;
 import java.util.concurrent.*;
+import javax.inject.*;
 
-@Entity(tableName = "photoslistresponse")
-public class PhotosListResponse {
+public class PhotosListResponse extends RealmObject {
 
     private static final Gson gson = new Gson();
-    @NonNull @PrimaryKey private java.lang.String id = UUID.randomUUID().toString();
+    @NonNull private java.lang.String id = UUID.randomUUID().toString();
 
-    @ColumnInfo(name = "metaId")
-    @ForeignKey(entity = com.motiv.piotr.Meta.class, parentColumns = "id", childColumns = "metaId")
-    private java.lang.String metaId;
-
-    @Ignore
     @SerializedName("result")
-    private java.util.List<com.motiv.piotr.Photo> result;
+    private RealmList<com.motiv.piotr.Photo> result;
 
-    @Ignore
     @SerializedName("_meta")
     private com.motiv.piotr.Meta meta;
 
@@ -43,7 +38,7 @@ public class PhotosListResponse {
         return this.result;
     }
 
-    public void setResult(java.util.List<com.motiv.piotr.Photo> result) {
+    public void setResult(RealmList<com.motiv.piotr.Photo> result) {
         this.result = result;
     }
 
@@ -54,12 +49,6 @@ public class PhotosListResponse {
 
     public void setMeta(com.motiv.piotr.Meta meta) {
         this.meta = meta;
-    }
-
-    @BindingAdapter({"bind:imageUrl"})
-    public static void loadImage(ImageView view, java.lang.String url) {
-
-        Picasso.with(view.getContext()).load(url).into(view);
     }
 
     public static PhotosListResponse fromJson(String json) {
@@ -76,13 +65,5 @@ public class PhotosListResponse {
 
     public static PhotosListResponse[] fromJsonArray(String array) {
         return gson.fromJson(array, PhotosListResponse[].class);
-    }
-
-    public java.lang.String getMetaId() {
-        return this.metaId;
-    };
-
-    public void setMetaId(java.lang.String metaId) {
-        this.metaId = metaId;
     }
 }

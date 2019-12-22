@@ -2,12 +2,19 @@ package com.motiv.piotr;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.fragment.app.*;
 import androidx.recyclerview.widget.*;
-import com.motiv.piotr.databinding.UserslistadapterBinding;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import dagger.*;
+import dagger.android.*;
+import dagger.android.support.*;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.concurrent.*;
+import javax.inject.*;
 
 public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.AdapterViewHolder> {
 
@@ -21,11 +28,15 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.Adap
 
     public class AdapterViewHolder extends RecyclerView.ViewHolder {
 
-        private UserslistadapterBinding binding;
+        LinearLayout linearlayout00;
+        ImageView imageview10;
+        TextView textview11;
 
-        public AdapterViewHolder(UserslistadapterBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        public AdapterViewHolder(View itemView) {
+            super(itemView);
+            linearlayout00 = (LinearLayout) itemView.findViewById(R.id.linearlayout00);
+            imageview10 = (ImageView) itemView.findViewById(R.id.imageview10);
+            textview11 = (TextView) itemView.findViewById(R.id.textview11);
         }
     }
 
@@ -47,9 +58,10 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.Adap
 
     @Override
     public AdapterViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
+
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        UserslistadapterBinding binding = UserslistadapterBinding.inflate(inflater);
-        return new AdapterViewHolder(binding);
+        View row = inflater.inflate(R.layout.userslistadapter, parent, false);
+        return new AdapterViewHolder(row);
     }
 
     @Override
@@ -64,12 +76,11 @@ public class UsersListAdapter extends RecyclerView.Adapter<UsersListAdapter.Adap
                     }
                 });
         User user = data.get(position);
-
-        Picasso.with(viewHolder.itemView.getContext())
+        Glide.with(viewHolder.itemView.getContext())
                 .load(user.getLinks().getAvatar().getHref())
-                .into(viewHolder.binding.imageview10);
+                .into(viewHolder.imageview10);
         ;
-        viewHolder.binding.textview11.setText(user.getFirst_name());
+        viewHolder.textview11.setText(user.getFirst_name());
     }
 
     public void setOnItemClickListener(
