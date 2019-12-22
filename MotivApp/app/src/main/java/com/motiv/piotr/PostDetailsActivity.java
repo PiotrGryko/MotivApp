@@ -4,9 +4,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.*;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.PostdetailsactivityBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -14,6 +16,7 @@ import javax.inject.*;
 
 public class PostDetailsActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
+    private PostdetailsactivityBinding postdetailsactivityBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private com.motiv.piotr.Post post;
     private UsersListAdapter usersListAdapter;
@@ -39,7 +42,8 @@ public class PostDetailsActivity extends AppCompatActivity implements HasSupport
 
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.postdetailsactivity);
+        postdetailsactivityBinding =
+                DataBindingUtil.setContentView(this, R.layout.postdetailsactivity);
 
         post = com.motiv.piotr.Post.fromJson(getIntent().getStringExtra("post"));
 
@@ -49,9 +53,9 @@ public class PostDetailsActivity extends AppCompatActivity implements HasSupport
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(PostDetailsActivity.this.getSupportFragmentManager());
         navigationController = new NavigationController(PostDetailsActivity.this);
-        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
-        textview10 = (TextView) findViewById(R.id.textview10);
-        textview11 = (TextView) findViewById(R.id.textview11);
+        linearlayout00 = postdetailsactivityBinding.linearlayout00;
+        textview10 = postdetailsactivityBinding.textview10;
+        textview11 = postdetailsactivityBinding.textview11;
 
         textview10.setText(post.getTitle());
         textview11.setText(post.getBody());

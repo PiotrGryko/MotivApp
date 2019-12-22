@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.*;
 import androidx.recyclerview.widget.RecyclerView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.PostslistfragmentBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -18,6 +19,7 @@ import javax.inject.*;
 
 public class PostsListFragment extends Fragment {
 
+    private PostslistfragmentBinding postslistfragmentBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
@@ -42,7 +44,7 @@ public class PostsListFragment extends Fragment {
             @Nullable ViewGroup parent,
             @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.postslistfragment, parent, false);
+        postslistfragmentBinding = PostslistfragmentBinding.inflate(inflater);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -51,8 +53,8 @@ public class PostsListFragment extends Fragment {
                 new FragmentsPagerAdapter(
                         PostsListFragment.this.getActivity().getSupportFragmentManager());
         navigationController = new NavigationController(PostsListFragment.this.getActivity());
-        linearlayout00 = (LinearLayout) v.findViewById(R.id.linearlayout00);
-        recyclerview10 = (RecyclerView) v.findViewById(R.id.recyclerview10);
+        linearlayout00 = postslistfragmentBinding.linearlayout00;
+        recyclerview10 = postslistfragmentBinding.recyclerview10;
 
         recyclerview10.setLayoutManager(
                 new LinearLayoutManager(PostsListFragment.this.getActivity()));
@@ -77,6 +79,6 @@ public class PostsListFragment extends Fragment {
                     }
                 });
 
-        return v;
+        return postslistfragmentBinding.getRoot();
     }
 }

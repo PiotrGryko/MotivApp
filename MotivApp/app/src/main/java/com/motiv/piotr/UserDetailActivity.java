@@ -5,10 +5,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.*;
 import com.bumptech.glide.Glide;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.UserdetailactivityBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -16,6 +18,7 @@ import javax.inject.*;
 
 public class UserDetailActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
+    private UserdetailactivityBinding userdetailactivityBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private com.motiv.piotr.User user;
     private UsersListAdapter usersListAdapter;
@@ -41,7 +44,8 @@ public class UserDetailActivity extends AppCompatActivity implements HasSupportF
 
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.userdetailactivity);
+        userdetailactivityBinding =
+                DataBindingUtil.setContentView(this, R.layout.userdetailactivity);
 
         user = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("user"));
 
@@ -51,9 +55,9 @@ public class UserDetailActivity extends AppCompatActivity implements HasSupportF
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(UserDetailActivity.this.getSupportFragmentManager());
         navigationController = new NavigationController(UserDetailActivity.this);
-        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
-        imageview10 = (ImageView) findViewById(R.id.imageview10);
-        textview11 = (TextView) findViewById(R.id.textview11);
+        linearlayout00 = userdetailactivityBinding.linearlayout00;
+        imageview10 = userdetailactivityBinding.imageview10;
+        textview11 = userdetailactivityBinding.textview11;
 
         Glide.with(UserDetailActivity.this)
                 .load(user.getLinks().getAvatar().getHref())
