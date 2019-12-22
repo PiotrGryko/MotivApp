@@ -5,26 +5,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.*;
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
-import com.motiv.piotr.databinding.DashboardactivityBinding;
-import com.squareup.picasso.Picasso;
+import dagger.*;
+import dagger.android.*;
+import dagger.android.support.*;
+import javax.inject.*;
 
-public class DashboardActivity extends AppCompatActivity implements DashboardActivityContract.View {
+public class DashboardActivity extends AppCompatActivity
+        implements DashboardActivityContract.View, HasSupportFragmentInjector {
 
-    private DashboardactivityBinding dashboardactivityBinding;
+    @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private com.motiv.piotr.User loggedUser;
     private DashboardActivityContract.Presenter presenter;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
     private PhotosPagerAdapter photosPagerAdapter;
     private FragmentsPagerAdapter fragmentsPagerAdapter;
-    private GoRestApi goRestApi;
-    private DaoRepository daoRepository = DaoRepositoryFactory.getInstance(DashboardActivity.this);
-    private LocalStorage localStorage;
+    @Inject GoRestApi goRestApi;
+    @Inject DaoRepository daoRepository;
+    @Inject LocalStorage localStorage;
     private NavigationController navigationController;
     private DrawerLayout drawerlayout00;
     private NavigationView navigationview11;
@@ -33,10 +37,17 @@ public class DashboardActivity extends AppCompatActivity implements DashboardAct
     private TextView headertextview11;
 
     @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+
+        return dispatchingAndroidInjector;
+    }
+
+    @Override
     protected void onCreate(@Nullable android.os.Bundle savedInstanceState) {
 
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        dashboardactivityBinding = DataBindingUtil.setContentView(this, R.layout.dashboardactivity);
+        setContentView(R.layout.dashboardactivity);
 
         loggedUser = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("loggedUser"));
 
@@ -45,11 +56,9 @@ public class DashboardActivity extends AppCompatActivity implements DashboardAct
         photosPagerAdapter = new PhotosPagerAdapter();
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(DashboardActivity.this.getSupportFragmentManager());
-        localStorage = LocalStorage.getInstance(DashboardActivity.this);
         navigationController = new NavigationController(DashboardActivity.this);
-        goRestApi = GoRestApiFactory.getInstance(localStorage);
-        drawerlayout00 = dashboardactivityBinding.drawerlayout00;
-        navigationview11 = dashboardactivityBinding.navigationview11;
+        drawerlayout00 = (DrawerLayout) findViewById(R.id.drawerlayout00);
+        navigationview11 = (NavigationView) findViewById(R.id.navigationview11);
         headerlinearlayout00 =
                 (LinearLayout) navigationview11.getHeaderView(0).findViewById(R.id.linearlayout00);
         headerimageview10 =
@@ -72,8 +81,7 @@ public class DashboardActivity extends AppCompatActivity implements DashboardAct
                     }
                 });
         headertextview11.setText(loggedUser.getFirst_name());
-
-        Picasso.with(DashboardActivity.this)
+        Glide.with(DashboardActivity.this)
                 .load(loggedUser.getLinks().getAvatar().getHref())
                 .into(headerimageview10);
         ;
