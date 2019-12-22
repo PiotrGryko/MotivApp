@@ -6,9 +6,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.*;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.MainactivityBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -17,6 +19,7 @@ import javax.inject.*;
 public class MainActivity extends AppCompatActivity
         implements MainActivityContract.View, HasSupportFragmentInjector {
 
+    private MainactivityBinding mainactivityBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private MainActivityContract.Presenter presenter;
     private UsersListAdapter usersListAdapter;
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainactivity);
+        mainactivityBinding = DataBindingUtil.setContentView(this, R.layout.mainactivity);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -50,9 +53,9 @@ public class MainActivity extends AppCompatActivity
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(MainActivity.this.getSupportFragmentManager());
         navigationController = new NavigationController(MainActivity.this);
-        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
-        edittext10 = (EditText) findViewById(R.id.edittext10);
-        button11 = (Button) findViewById(R.id.button11);
+        linearlayout00 = mainactivityBinding.linearlayout00;
+        edittext10 = mainactivityBinding.edittext10;
+        button11 = mainactivityBinding.button11;
 
         presenter =
                 new MainActivityPresenter(
