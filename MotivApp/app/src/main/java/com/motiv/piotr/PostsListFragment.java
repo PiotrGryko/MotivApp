@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.DaoRepositoryFactory;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.PostslistfragmentBinding;
 
 public class PostsListFragment extends Fragment implements PostsListFragmentContract.View {
 
+    private PostslistfragmentBinding postslistfragmentBinding;
     private PostsListFragmentContract.Presenter presenter;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
@@ -33,7 +35,7 @@ public class PostsListFragment extends Fragment implements PostsListFragmentCont
             @Nullable ViewGroup parent,
             final @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.postslistfragment, parent, false);
+        postslistfragmentBinding = PostslistfragmentBinding.inflate(inflater);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -45,8 +47,8 @@ public class PostsListFragment extends Fragment implements PostsListFragmentCont
         localStorage = LocalStorage.getInstance(PostsListFragment.this.getActivity());
         navigationController = new NavigationController(PostsListFragment.this.getActivity());
         goRestApi = GoRestApiFactory.getInstance(localStorage);
-        linearlayout00 = (LinearLayout) v.findViewById(R.id.linearlayout00);
-        recyclerview10 = (RecyclerView) v.findViewById(R.id.recyclerview10);
+        linearlayout00 = postslistfragmentBinding.linearlayout00;
+        recyclerview10 = postslistfragmentBinding.recyclerview10;
         presenter =
                 new PostsListFragmentPresenter(
                         PostsListFragment.this, goRestApi, daoRepository, localStorage);
@@ -65,7 +67,7 @@ public class PostsListFragment extends Fragment implements PostsListFragmentCont
                     }
                 });
 
-        return v;
+        return postslistfragmentBinding.getRoot();
     }
 
     @Override
