@@ -6,11 +6,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.MainactivityBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MainactivityBinding mainactivityBinding;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
     private PhotosPagerAdapter photosPagerAdapter;
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable android.os.Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mainactivity);
+        mainactivityBinding = DataBindingUtil.setContentView(this, R.layout.mainactivity);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -37,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         localStorage = LocalStorage.getInstance(MainActivity.this);
         navigationController = new NavigationController(MainActivity.this);
         goRestApi = GoRestApiFactory.getInstance(localStorage);
-        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
-        edittext10 = (EditText) findViewById(R.id.edittext10);
-        button11 = (Button) findViewById(R.id.button11);
+        linearlayout00 = mainactivityBinding.linearlayout00;
+        edittext10 = mainactivityBinding.edittext10;
+        button11 = mainactivityBinding.button11;
 
         button11.setOnClickListener(
                 new android.view.View.OnClickListener() {
