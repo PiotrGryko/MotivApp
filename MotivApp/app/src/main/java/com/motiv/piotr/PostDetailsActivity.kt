@@ -4,23 +4,11 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.*
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
-import com.motiv.piotr.databinding.PostdetailsactivityBinding
-import dagger.*
-import dagger.android.*
-import dagger.android.support.*
-import javax.inject.*
 import kotlinx.android.synthetic.main.postdetailsactivity.*
 
-public class PostDetailsActivity : AppCompatActivity(), HasSupportFragmentInjector {
-
-    private lateinit var postdetailsactivityBinding: PostdetailsactivityBinding
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+public class PostDetailsActivity : AppCompatActivity() {
 
     private lateinit var post: com.motiv.piotr.Post
 
@@ -32,14 +20,11 @@ public class PostDetailsActivity : AppCompatActivity(), HasSupportFragmentInject
 
     private lateinit var fragmentsPagerAdapter: FragmentsPagerAdapter
 
-    @Inject
-    lateinit var goRestApi: GoRestApi
+    private lateinit var goRestApi: GoRestApi
 
-    @Inject
-    lateinit var daoRepository: DaoRepository
+    private var daoRepository: DaoRepository = DaoRepositoryFactory.getInstance(this@PostDetailsActivity)
 
-    @Inject
-    lateinit var localStorage: LocalStorage
+    private lateinit var localStorage: LocalStorage
 
     private lateinit var navigationController: NavigationController
 
@@ -49,12 +34,9 @@ public class PostDetailsActivity : AppCompatActivity(), HasSupportFragmentInject
 
     private lateinit var textview11: TextView
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return dispatchingAndroidInjector
-    } override fun onCreate(savedInstanceState: android.os.Bundle?) {
-        AndroidInjection.inject(this)
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        postdetailsactivityBinding = DataBindingUtil.setContentView(this, R.layout.postdetailsactivity)
+        setContentView(R.layout.postdetailsactivity)
 
         post = com.motiv.piotr.Post.fromJson(getIntent().getStringExtra("post"))
 
@@ -62,10 +44,12 @@ public class PostDetailsActivity : AppCompatActivity(), HasSupportFragmentInject
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(this@PostDetailsActivity.getSupportFragmentManager())
+        localStorage = LocalStorage.getInstance(this@PostDetailsActivity)
         navigationController = NavigationController(this@PostDetailsActivity)
-        linearlayout00 = postdetailsactivityBinding.linearlayout00
-        textview10 = postdetailsactivityBinding.textview10
-        textview11 = postdetailsactivityBinding.textview11
+        goRestApi = GoRestApiFactory.getInstance(localStorage)
+        linearlayout00 = findViewById<LinearLayout>(R.id.linearlayout00)
+        textview10 = findViewById<TextView>(R.id.textview10)
+        textview11 = findViewById<TextView>(R.id.textview11)
 
         textview10.setText(post.getTitle())
         textview11.setText(post.getBody())
