@@ -1,26 +1,35 @@
  
 package com.motiv.piotr
-import android.widget.ImageView
 import androidx.annotation.NonNull
-import androidx.databinding.BindingAdapter
+import androidx.fragment.app.*
+import androidx.room.*
 import com.google.gson.*
 import com.google.gson.annotations.*
 import com.google.gson.reflect.*
-import com.squareup.picasso.Picasso
-import io.realm.*
+import dagger.*
+import dagger.android.*
+import dagger.android.support.*
 import java.util.*
 import java.util.concurrent.*
+import javax.inject.*
+@Entity(tableName = "userresponse")
+public class UserResponse {
 
-public open class UserResponse : RealmObject() {
+    @NonNull
+    @PrimaryKey
 
-    @NonNull private var id: String = UUID.randomUUID().toString()
-
+    private var id: String = UUID.randomUUID().toString()
+    @ColumnInfo(name = "resultId")@ForeignKey(entity = com.motiv.piotr.User::class, parentColumns = ["id"], childColumns = ["resultId"])
+    private
+    var resultId: String = ""
+    @ColumnInfo(name = "metaId")@ForeignKey(entity = com.motiv.piotr.Meta::class, parentColumns = ["id"], childColumns = ["metaId"])
+    private
+    var metaId: String = ""
+    @Ignore
     @SerializedName("result")
-
     private var result: com.motiv.piotr.User = com.motiv.piotr.User()
-
+    @Ignore
     @SerializedName("_meta")
-
     private var meta: com.motiv.piotr.Meta = com.motiv.piotr.Meta()
 
     fun getId(): String {
@@ -35,9 +44,6 @@ public open class UserResponse : RealmObject() {
         return this.meta
     } fun setMeta(meta: com.motiv.piotr.Meta) {
         this.meta = meta
-    } @BindingAdapter("bind:imageUrl")
-    fun loadImage(view: ImageView, url: String) {
-        Picasso.with(view.getContext()).load(url).into(view)
     } companion object {
         val gson: Gson = Gson()
         fun fromJson(json: String): UserResponse {
@@ -55,5 +61,5 @@ public open class UserResponse : RealmObject() {
         fun fromJsonArray(json: String): Array<UserResponse> {
             return gson.fromJson(json, Array<UserResponse>::class.java)
         }
-    }
+    } public fun getResultId(): String { return this.resultId; }; public fun setResultId(resultId: String) { this.resultId = resultId; } public fun getMetaId(): String { return this.metaId; }; public fun setMetaId(metaId: String) { this.metaId = metaId; }
 }

@@ -1,34 +1,38 @@
  
 package com.motiv.piotr
-import android.widget.ImageView
 import androidx.annotation.NonNull
-import androidx.databinding.BindingAdapter
+import androidx.fragment.app.*
+import androidx.room.*
 import com.google.gson.*
 import com.google.gson.annotations.*
 import com.google.gson.reflect.*
-import com.squareup.picasso.Picasso
-import io.realm.*
+import dagger.*
+import dagger.android.*
+import dagger.android.support.*
 import java.util.*
 import java.util.concurrent.*
+import javax.inject.*
+@Entity(tableName = "meta")
+public class Meta {
 
-public open class Meta : RealmObject() {
+    @NonNull
+    @PrimaryKey
 
-    @NonNull private var id: String = UUID.randomUUID().toString()
-
+    private var id: String = UUID.randomUUID().toString()
+    @ColumnInfo(name = "rateLimitId")@ForeignKey(entity = com.motiv.piotr.RateLimit::class, parentColumns = ["id"], childColumns = ["rateLimitId"])
+    private
+    var rateLimitId: String = ""
+    @ColumnInfo(name = "code")
     @SerializedName("code")
-
     private var code: Int = 0
-
+    @Ignore
     @SerializedName("rateLimit")
-
     private var rateLimit: com.motiv.piotr.RateLimit = com.motiv.piotr.RateLimit()
-
+    @ColumnInfo(name = "success")
     @SerializedName("success")
-
     private var success: Boolean = false
-
+    @ColumnInfo(name = "message")
     @SerializedName("message")
-
     private var message: String = ""
 
     fun getId(): String {
@@ -51,9 +55,6 @@ public open class Meta : RealmObject() {
         return this.message
     } fun setMessage(message: String) {
         this.message = message
-    } @BindingAdapter("bind:imageUrl")
-    fun loadImage(view: ImageView, url: String) {
-        Picasso.with(view.getContext()).load(url).into(view)
     } companion object {
         val gson: Gson = Gson()
         fun fromJson(json: String): Meta {
@@ -71,5 +72,5 @@ public open class Meta : RealmObject() {
         fun fromJsonArray(json: String): Array<Meta> {
             return gson.fromJson(json, Array<Meta>::class.java)
         }
-    }
+    } public fun getRateLimitId(): String { return this.rateLimitId; }; public fun setRateLimitId(rateLimitId: String) { this.rateLimitId = rateLimitId; }
 }
