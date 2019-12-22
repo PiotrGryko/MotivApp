@@ -5,26 +5,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.*
-import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.motiv.piotr.dao.DaoRepository
+import com.motiv.piotr.dao.DaoRepositoryFactory
 import com.motiv.piotr.dao.LocalStorage
-import com.motiv.piotr.databinding.DashboardactivityBinding
-import dagger.*
-import dagger.android.*
-import dagger.android.support.*
-import javax.inject.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dashboardactivity.*
 
-public class DashboardActivity : AppCompatActivity(), HasSupportFragmentInjector {
-
-    private lateinit var dashboardactivityBinding: DashboardactivityBinding
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+public class DashboardActivity : AppCompatActivity() {
 
     private lateinit var loggedUser: com.motiv.piotr.User
 
@@ -36,14 +25,11 @@ public class DashboardActivity : AppCompatActivity(), HasSupportFragmentInjector
 
     private lateinit var fragmentsPagerAdapter: FragmentsPagerAdapter
 
-    @Inject
-    lateinit var goRestApi: GoRestApi
+    private lateinit var goRestApi: GoRestApi
 
-    @Inject
-    lateinit var daoRepository: DaoRepository
+    private lateinit var daoRepository: DaoRepository
 
-    @Inject
-    lateinit var localStorage: LocalStorage
+    private lateinit var localStorage: LocalStorage
 
     private lateinit var navigationController: NavigationController
 
@@ -57,12 +43,9 @@ public class DashboardActivity : AppCompatActivity(), HasSupportFragmentInjector
 
     private lateinit var headertextview11: TextView
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return dispatchingAndroidInjector
-    } override fun onCreate(savedInstanceState: android.os.Bundle?) {
-        AndroidInjection.inject(this)
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        dashboardactivityBinding = DataBindingUtil.setContentView(this, R.layout.dashboardactivity)
+        setContentView(R.layout.dashboardactivity)
 
         loggedUser = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("loggedUser"))
 
@@ -70,9 +53,12 @@ public class DashboardActivity : AppCompatActivity(), HasSupportFragmentInjector
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(this@DashboardActivity.getSupportFragmentManager())
+        daoRepository = DaoRepositoryFactory.getInstance(this@DashboardActivity)
+        localStorage = LocalStorage.getInstance(this@DashboardActivity)
         navigationController = NavigationController(this@DashboardActivity)
-        drawerlayout00 = dashboardactivityBinding.drawerlayout00
-        navigationview11 = dashboardactivityBinding.navigationview11
+        goRestApi = GoRestApiFactory.getInstance(localStorage)
+        drawerlayout00 = findViewById<DrawerLayout>(R.id.drawerlayout00)
+        navigationview11 = findViewById<NavigationView>(R.id.navigationview11)
         headerlinearlayout00 = navigationview11.getHeaderView(0).findViewById<LinearLayout>(R.id.linearlayout00)
         headerimageview10 = navigationview11.getHeaderView(0).findViewById<ImageView>(R.id.imageview10)
         headertextview11 = navigationview11.getHeaderView(0).findViewById<TextView>(R.id.textview11)
@@ -85,9 +71,8 @@ public class DashboardActivity : AppCompatActivity(), HasSupportFragmentInjector
             } 
         })
         headertextview11.setText(loggedUser.getFirst_name())
-        Glide.with(this@DashboardActivity)
-            .load(loggedUser.getLinks().getAvatar().getHref())
-            .into(headerimageview10)
+
+        Picasso.with(this@DashboardActivity).load(loggedUser.getLinks().getAvatar().getHref()).into(headerimageview10)
         headerlinearlayout00.setOnClickListener(object : android.view.View.OnClickListener {
             override fun onClick(argument0: android.view.View) {
                 navigationController.startUserDetailActivity(loggedUser)

@@ -9,20 +9,11 @@ import androidx.fragment.app.*
 import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.motiv.piotr.dao.DaoRepository
+import com.motiv.piotr.dao.DaoRepositoryFactory
 import com.motiv.piotr.dao.LocalStorage
-import com.motiv.piotr.databinding.UserslistfragmentBinding
-import dagger.*
-import dagger.android.*
-import dagger.android.support.*
-import javax.inject.*
 import kotlinx.android.synthetic.main.userslistfragment.*
 
 public class UsersListFragment : Fragment() {
-
-    private lateinit var userslistfragmentBinding: UserslistfragmentBinding
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private lateinit var usersListAdapter: UsersListAdapter
 
@@ -32,14 +23,11 @@ public class UsersListFragment : Fragment() {
 
     private lateinit var fragmentsPagerAdapter: FragmentsPagerAdapter
 
-    @Inject
-    lateinit var goRestApi: GoRestApi
+    private lateinit var goRestApi: GoRestApi
 
-    @Inject
-    lateinit var daoRepository: DaoRepository
+    private lateinit var daoRepository: DaoRepository
 
-    @Inject
-    lateinit var localStorage: LocalStorage
+    private lateinit var localStorage: LocalStorage
 
     private lateinit var navigationController: NavigationController
 
@@ -47,19 +35,19 @@ public class UsersListFragment : Fragment() {
 
     private lateinit var recyclerview10: RecyclerView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AndroidSupportInjection.inject(this)
-    } override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
-        userslistfragmentBinding = UserslistfragmentBinding.inflate(inflater)
+    override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
+        val v: View = inflater.inflate(R.layout.userslistfragment, parent, false)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(activity!!.getSupportFragmentManager())
+        daoRepository = DaoRepositoryFactory.getInstance(activity!!)
+        localStorage = LocalStorage.getInstance(activity!!)
         navigationController = NavigationController(activity!!)
-        linearlayout00 = userslistfragmentBinding.linearlayout00
-        recyclerview10 = userslistfragmentBinding.recyclerview10
+        goRestApi = GoRestApiFactory.getInstance(localStorage)
+        linearlayout00 = v.findViewById<LinearLayout>(R.id.linearlayout00)
+        recyclerview10 = v.findViewById<RecyclerView>(R.id.recyclerview10)
 
         recyclerview10?.setLayoutManager(LinearLayoutManager(activity!!))
 
@@ -76,6 +64,6 @@ public class UsersListFragment : Fragment() {
             } 
         })
 
-        return userslistfragmentBinding.getRoot()
+        return v
     }
 }
