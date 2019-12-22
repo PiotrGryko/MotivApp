@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.DaoRepositoryFactory
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.PostslistfragmentBinding
 import kotlinx.android.synthetic.main.postslistfragment.*
 
 public class PostsListFragment : Fragment() {
+
+    private lateinit var postslistfragmentBinding: PostslistfragmentBinding
 
     private lateinit var usersListAdapter: UsersListAdapter
 
@@ -36,7 +39,7 @@ public class PostsListFragment : Fragment() {
     private lateinit var recyclerview10: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
-        val v: View = inflater.inflate(R.layout.postslistfragment, parent, false)
+        postslistfragmentBinding = PostslistfragmentBinding.inflate(inflater)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
@@ -46,8 +49,8 @@ public class PostsListFragment : Fragment() {
         localStorage = LocalStorage.getInstance(activity!!)
         navigationController = NavigationController(activity!!)
         goRestApi = GoRestApiFactory.getInstance(localStorage)
-        linearlayout00 = v.findViewById<LinearLayout>(R.id.linearlayout00)
-        recyclerview10 = v.findViewById<RecyclerView>(R.id.recyclerview10)
+        linearlayout00 = postslistfragmentBinding.linearlayout00
+        recyclerview10 = postslistfragmentBinding.recyclerview10
 
         recyclerview10?.setLayoutManager(LinearLayoutManager(activity!!))
 
@@ -64,6 +67,6 @@ public class PostsListFragment : Fragment() {
             } 
         })
 
-        return v
+        return postslistfragmentBinding.getRoot()
     }
 }
