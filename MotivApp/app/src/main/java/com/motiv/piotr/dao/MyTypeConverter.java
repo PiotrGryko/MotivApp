@@ -1,6 +1,5 @@
 package com.motiv.piotr.dao;
 
-import androidx.fragment.app.*;
 import androidx.room.*;
 import com.google.gson.*;
 import com.google.gson.annotations.*;
@@ -16,11 +15,7 @@ import com.motiv.piotr.RateLimit;
 import com.motiv.piotr.User;
 import com.motiv.piotr.UserResponse;
 import com.motiv.piotr.UsersListResponse;
-import dagger.*;
-import dagger.android.*;
-import dagger.android.support.*;
 import java.util.List;
-import javax.inject.*;
 
 public class MyTypeConverter {
 
