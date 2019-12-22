@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.*;
 import androidx.recyclerview.widget.RecyclerView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.UserslistfragmentBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -18,6 +19,7 @@ import javax.inject.*;
 
 public class UsersListFragment extends Fragment implements UsersListFragmentContract.View {
 
+    private UserslistfragmentBinding userslistfragmentBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private UsersListFragmentContract.Presenter presenter;
     private UsersListAdapter usersListAdapter;
@@ -37,7 +39,7 @@ public class UsersListFragment extends Fragment implements UsersListFragmentCont
             @Nullable ViewGroup parent,
             final @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.userslistfragment, parent, false);
+        userslistfragmentBinding = UserslistfragmentBinding.inflate(inflater);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -46,8 +48,8 @@ public class UsersListFragment extends Fragment implements UsersListFragmentCont
                 new FragmentsPagerAdapter(
                         UsersListFragment.this.getActivity().getSupportFragmentManager());
         navigationController = new NavigationController(UsersListFragment.this.getActivity());
-        linearlayout00 = (LinearLayout) v.findViewById(R.id.linearlayout00);
-        recyclerview10 = (RecyclerView) v.findViewById(R.id.recyclerview10);
+        linearlayout00 = userslistfragmentBinding.linearlayout00;
+        recyclerview10 = userslistfragmentBinding.recyclerview10;
         presenter =
                 new UsersListFragmentPresenter(
                         UsersListFragment.this, goRestApi, daoRepository, localStorage);
@@ -66,7 +68,7 @@ public class UsersListFragment extends Fragment implements UsersListFragmentCont
                     }
                 });
 
-        return v;
+        return userslistfragmentBinding.getRoot();
     }
 
     @Override
