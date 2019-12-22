@@ -5,12 +5,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.*
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.DashboardactivityBinding
 import dagger.*
 import dagger.android.*
 import dagger.android.support.*
@@ -18,6 +20,8 @@ import javax.inject.*
 import kotlinx.android.synthetic.main.dashboardactivity.*
 
 public class DashboardActivity : AppCompatActivity(), DashboardActivityContract.View, HasSupportFragmentInjector {
+
+    private lateinit var dashboardactivityBinding: DashboardactivityBinding
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -60,7 +64,7 @@ public class DashboardActivity : AppCompatActivity(), DashboardActivityContract.
     } override fun onCreate(savedInstanceState: android.os.Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dashboardactivity)
+        dashboardactivityBinding = DataBindingUtil.setContentView(this, R.layout.dashboardactivity)
 
         loggedUser = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("loggedUser"))
 
@@ -69,8 +73,8 @@ public class DashboardActivity : AppCompatActivity(), DashboardActivityContract.
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(this@DashboardActivity.getSupportFragmentManager())
         navigationController = NavigationController(this@DashboardActivity)
-        drawerlayout00 = findViewById<DrawerLayout>(R.id.drawerlayout00)
-        navigationview11 = findViewById<NavigationView>(R.id.navigationview11)
+        drawerlayout00 = dashboardactivityBinding.drawerlayout00
+        navigationview11 = dashboardactivityBinding.navigationview11
         headerlinearlayout00 = navigationview11.getHeaderView(0).findViewById<LinearLayout>(R.id.linearlayout00)
         headerimageview10 = navigationview11.getHeaderView(0).findViewById<ImageView>(R.id.imageview10)
         headertextview11 = navigationview11.getHeaderView(0).findViewById<TextView>(R.id.textview11)

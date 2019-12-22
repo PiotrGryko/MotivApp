@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.UserslistfragmentBinding
 import dagger.*
 import dagger.android.*
 import dagger.android.support.*
@@ -18,6 +19,8 @@ import kotlin.collections.List
 import kotlinx.android.synthetic.main.userslistfragment.*
 
 public class UsersListFragment : Fragment(), UsersListFragmentContract.View {
+
+    private lateinit var userslistfragmentBinding: UserslistfragmentBinding
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -48,15 +51,15 @@ public class UsersListFragment : Fragment(), UsersListFragmentContract.View {
     private lateinit var recyclerview10: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
-        val v: View = inflater.inflate(R.layout.userslistfragment, parent, false)
+        userslistfragmentBinding = UserslistfragmentBinding.inflate(inflater)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(activity!!.getSupportFragmentManager())
         navigationController = NavigationController(activity!!)
-        linearlayout00 = v.findViewById<LinearLayout>(R.id.linearlayout00)
-        recyclerview10 = v.findViewById<RecyclerView>(R.id.recyclerview10)
+        linearlayout00 = userslistfragmentBinding.linearlayout00
+        recyclerview10 = userslistfragmentBinding.recyclerview10
         presenter = UsersListFragmentPresenter(this@UsersListFragment, goRestApi, daoRepository, localStorage)
 
         recyclerview10?.setLayoutManager(LinearLayoutManager(activity!!))
@@ -69,7 +72,7 @@ public class UsersListFragment : Fragment(), UsersListFragmentContract.View {
             } 
         })
 
-        return v
+        return userslistfragmentBinding.getRoot()
     } override fun usersListAdaptersetData(arg0: List<com.motiv.piotr.User>) {
         usersListAdapter.setData(arg0)
     } override fun navigationControllerstartUserDetailActivity(arg0: com.motiv.piotr.User) {

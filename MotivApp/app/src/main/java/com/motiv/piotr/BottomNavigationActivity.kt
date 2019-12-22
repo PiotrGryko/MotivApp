@@ -3,10 +3,12 @@ package com.motiv.piotr
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.BottomnavigationactivityBinding
 import dagger.*
 import dagger.android.*
 import dagger.android.support.*
@@ -14,6 +16,8 @@ import javax.inject.*
 import kotlinx.android.synthetic.main.bottomnavigationactivity.*
 
 public class BottomNavigationActivity : AppCompatActivity(), BottomNavigationActivityContract.View, HasSupportFragmentInjector {
+
+    private lateinit var bottomnavigationactivityBinding: BottomnavigationactivityBinding
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -48,15 +52,15 @@ public class BottomNavigationActivity : AppCompatActivity(), BottomNavigationAct
     } override fun onCreate(savedInstanceState: android.os.Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bottomnavigationactivity)
+        bottomnavigationactivityBinding = DataBindingUtil.setContentView(this, R.layout.bottomnavigationactivity)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(this@BottomNavigationActivity.getSupportFragmentManager())
         navigationController = NavigationController(this@BottomNavigationActivity)
-        relativelayout00 = findViewById<RelativeLayout>(R.id.relativelayout00)
-        bottomnavigationview11 = findViewById<BottomNavigationView>(R.id.bottomnavigationview11)
+        relativelayout00 = bottomnavigationactivityBinding.relativelayout00
+        bottomnavigationview11 = bottomnavigationactivityBinding.bottomnavigationview11
 
         presenter = BottomNavigationActivityPresenter(this@BottomNavigationActivity, goRestApi, daoRepository, localStorage)
 

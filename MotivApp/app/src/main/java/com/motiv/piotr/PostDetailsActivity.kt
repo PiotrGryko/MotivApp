@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.*
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.PostdetailsactivityBinding
 import dagger.*
 import dagger.android.*
 import dagger.android.support.*
@@ -14,6 +16,8 @@ import javax.inject.*
 import kotlinx.android.synthetic.main.postdetailsactivity.*
 
 public class PostDetailsActivity : AppCompatActivity(), PostDetailsActivityContract.View, HasSupportFragmentInjector {
+
+    private lateinit var postdetailsactivityBinding: PostdetailsactivityBinding
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
@@ -52,7 +56,7 @@ public class PostDetailsActivity : AppCompatActivity(), PostDetailsActivityContr
     } override fun onCreate(savedInstanceState: android.os.Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.postdetailsactivity)
+        postdetailsactivityBinding = DataBindingUtil.setContentView(this, R.layout.postdetailsactivity)
 
         post = com.motiv.piotr.Post.fromJson(getIntent().getStringExtra("post"))
 
@@ -61,9 +65,9 @@ public class PostDetailsActivity : AppCompatActivity(), PostDetailsActivityContr
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(this@PostDetailsActivity.getSupportFragmentManager())
         navigationController = NavigationController(this@PostDetailsActivity)
-        linearlayout00 = findViewById<LinearLayout>(R.id.linearlayout00)
-        textview10 = findViewById<TextView>(R.id.textview10)
-        textview11 = findViewById<TextView>(R.id.textview11)
+        linearlayout00 = postdetailsactivityBinding.linearlayout00
+        textview10 = postdetailsactivityBinding.textview10
+        textview11 = postdetailsactivityBinding.textview11
 
         presenter = PostDetailsActivityPresenter(this@PostDetailsActivity, goRestApi, daoRepository, localStorage)
 
