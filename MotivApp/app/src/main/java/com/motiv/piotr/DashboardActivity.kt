@@ -5,14 +5,18 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.DashboardactivityBinding
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dashboardactivity.*
 
 public class DashboardActivity : AppCompatActivity(), DashboardActivityContract.View {
+
+    private lateinit var dashboardactivityBinding: DashboardactivityBinding
 
     private lateinit var loggedUser: com.motiv.piotr.User
 
@@ -46,7 +50,7 @@ public class DashboardActivity : AppCompatActivity(), DashboardActivityContract.
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dashboardactivity)
+        dashboardactivityBinding = DataBindingUtil.setContentView(this, R.layout.dashboardactivity)
 
         loggedUser = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("loggedUser"))
 
@@ -57,8 +61,8 @@ public class DashboardActivity : AppCompatActivity(), DashboardActivityContract.
         localStorage = LocalStorage.getInstance(this@DashboardActivity)
         navigationController = NavigationController(this@DashboardActivity)
         goRestApi = GoRestApiFactory.getInstance(localStorage)
-        drawerlayout00 = findViewById<DrawerLayout>(R.id.drawerlayout00)
-        navigationview11 = findViewById<NavigationView>(R.id.navigationview11)
+        drawerlayout00 = dashboardactivityBinding.drawerlayout00
+        navigationview11 = dashboardactivityBinding.navigationview11
         headerlinearlayout00 = navigationview11.getHeaderView(0).findViewById<LinearLayout>(R.id.linearlayout00)
         headerimageview10 = navigationview11.getHeaderView(0).findViewById<ImageView>(R.id.imageview10)
         headertextview11 = navigationview11.getHeaderView(0).findViewById<TextView>(R.id.textview11)
