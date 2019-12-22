@@ -1,9 +1,16 @@
  
 package com.motiv.piotr
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.fragment.app.*
 import androidx.recyclerview.widget.*
-import com.motiv.piotr.databinding.PostslistadapterBinding
+import dagger.*
+import dagger.android.*
+import dagger.android.support.*
+import javax.inject.*
 import kotlin.collections.List
 import kotlinx.android.synthetic.main.postslistadapter.view.*
 
@@ -18,7 +25,11 @@ public class PostsListAdapter : RecyclerView.Adapter<PostsListAdapter.AdapterVie
         public fun onItemClick(position: Int, item: com.motiv.piotr.Post): Unit
     }
 
-    public class AdapterViewHolder(val binding: PostslistadapterBinding) : RecyclerView.ViewHolder(binding.getRoot())
+    public class AdapterViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+
+        var linearlayout00: LinearLayout = view.linearlayout00
+        var textview10: TextView = view.textview10
+    }
 
     override fun getItemCount(): Int {
         return data.size
@@ -30,15 +41,15 @@ public class PostsListAdapter : RecyclerView.Adapter<PostsListAdapter.AdapterVie
         notifyDataSetChanged()
     } override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): AdapterViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val binding: PostslistadapterBinding = PostslistadapterBinding.inflate(inflater)
-        return AdapterViewHolder(binding)
+        val row: View = inflater.inflate(R.layout.postslistadapter, parent, false)
+        return AdapterViewHolder(row)
     } override fun onBindViewHolder(viewHolder: AdapterViewHolder, position: Int) {
         viewHolder.itemView.setOnClickListener {
             if (onItemClickListener != null)
                 onItemClickListener?.onItemClick(position, data.get(position))
         }
         val post: Post = data.get(position)
-        viewHolder.binding.textview10.setText(post.getTitle())
+        viewHolder.textview10.setText(post.getTitle())
     } fun setOnItemClickListener(onItemClickListener: com.motiv.piotr.PostsListAdapter.OnItemClickListener) {
         this.onItemClickListener = onItemClickListener
     }
