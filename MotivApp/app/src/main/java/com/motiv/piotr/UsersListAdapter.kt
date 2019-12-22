@@ -1,12 +1,9 @@
  
 package com.motiv.piotr
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.*
+import com.motiv.piotr.databinding.UserslistadapterBinding
 import com.squareup.picasso.Picasso
 import kotlin.collections.List
 import kotlinx.android.synthetic.main.userslistadapter.view.*
@@ -22,12 +19,7 @@ public class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.AdapterVie
         public fun onItemClick(position: Int, item: com.motiv.piotr.User): Unit
     }
 
-    public class AdapterViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
-        var linearlayout00: LinearLayout = view.linearlayout00
-        var imageview10: ImageView = view.imageview10
-        var textview11: TextView = view.textview11
-    }
+    public class AdapterViewHolder(val binding: UserslistadapterBinding) : RecyclerView.ViewHolder(binding.getRoot())
 
     override fun getItemCount(): Int {
         return data.size
@@ -39,8 +31,8 @@ public class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.AdapterVie
         notifyDataSetChanged()
     } override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): AdapterViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val row: View = inflater.inflate(R.layout.userslistadapter, parent, false)
-        return AdapterViewHolder(row)
+        val binding: UserslistadapterBinding = UserslistadapterBinding.inflate(inflater)
+        return AdapterViewHolder(binding)
     } override fun onBindViewHolder(viewHolder: AdapterViewHolder, position: Int) {
         viewHolder.itemView.setOnClickListener {
             if (onItemClickListener != null)
@@ -48,8 +40,8 @@ public class UsersListAdapter : RecyclerView.Adapter<UsersListAdapter.AdapterVie
         }
         val user: User = data.get(position)
 
-        Picasso.with(viewHolder.itemView.getContext()).load(user.getLinks().getAvatar().getHref()).into(viewHolder.imageview10)
-        viewHolder.textview11.setText(user.getFirst_name())
+        Picasso.with(viewHolder.itemView.getContext()).load(user.getLinks().getAvatar().getHref()).into(viewHolder.binding.imageview10)
+        viewHolder.binding.textview11.setText(user.getFirst_name())
     } fun setOnItemClickListener(onItemClickListener: com.motiv.piotr.UsersListAdapter.OnItemClickListener) {
         this.onItemClickListener = onItemClickListener
     }

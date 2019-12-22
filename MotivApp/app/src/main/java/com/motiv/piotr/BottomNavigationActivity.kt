@@ -3,13 +3,17 @@ package com.motiv.piotr
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.motiv.piotr.dao.DaoRepository
 import com.motiv.piotr.dao.DaoRepositoryFactory
 import com.motiv.piotr.dao.LocalStorage
+import com.motiv.piotr.databinding.BottomnavigationactivityBinding
 import kotlinx.android.synthetic.main.bottomnavigationactivity.*
 
 public class BottomNavigationActivity : AppCompatActivity(), BottomNavigationActivityContract.View {
+
+    private lateinit var bottomnavigationactivityBinding: BottomnavigationactivityBinding
 
     private lateinit var presenter: BottomNavigationActivityContract.Presenter
 
@@ -35,7 +39,7 @@ public class BottomNavigationActivity : AppCompatActivity(), BottomNavigationAct
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bottomnavigationactivity)
+        bottomnavigationactivityBinding = DataBindingUtil.setContentView(this, R.layout.bottomnavigationactivity)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
@@ -45,8 +49,8 @@ public class BottomNavigationActivity : AppCompatActivity(), BottomNavigationAct
         localStorage = LocalStorage.getInstance(this@BottomNavigationActivity)
         navigationController = NavigationController(this@BottomNavigationActivity)
         goRestApi = GoRestApiFactory.getInstance(localStorage)
-        relativelayout00 = findViewById<RelativeLayout>(R.id.relativelayout00)
-        bottomnavigationview11 = findViewById<BottomNavigationView>(R.id.bottomnavigationview11)
+        relativelayout00 = bottomnavigationactivityBinding.relativelayout00
+        bottomnavigationview11 = bottomnavigationactivityBinding.bottomnavigationview11
 
         presenter = BottomNavigationActivityPresenter(this@BottomNavigationActivity, goRestApi, daoRepository, localStorage)
 
