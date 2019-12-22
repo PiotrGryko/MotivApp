@@ -1,6 +1,5 @@
 package com.motiv.piotr.dao;
 
-import androidx.fragment.app.*;
 import com.motiv.piotr.Link;
 import com.motiv.piotr.Links;
 import com.motiv.piotr.Meta;
@@ -12,15 +11,11 @@ import com.motiv.piotr.RateLimit;
 import com.motiv.piotr.User;
 import com.motiv.piotr.UserResponse;
 import com.motiv.piotr.UsersListResponse;
-import dagger.*;
-import dagger.android.*;
-import dagger.android.support.*;
 import io.realm.*;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import javax.inject.*;
 
 public class DaoRepository {
 
