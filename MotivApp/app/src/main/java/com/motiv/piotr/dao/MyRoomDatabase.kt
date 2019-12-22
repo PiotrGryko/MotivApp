@@ -1,6 +1,5 @@
  
 package com.motiv.piotr.dao
-import androidx.fragment.app.*
 import androidx.room.*
 import com.motiv.piotr.Link
 import com.motiv.piotr.Links
@@ -13,10 +12,6 @@ import com.motiv.piotr.RateLimit
 import com.motiv.piotr.User
 import com.motiv.piotr.UserResponse
 import com.motiv.piotr.UsersListResponse
-import dagger.*
-import dagger.android.*
-import dagger.android.support.*
-import javax.inject.*
 @TypeConverters(MyTypeConverter::class)
 @Database(entities = [PostsListResponse::class, PhotosListResponse::class, UsersListResponse::class, RateLimit::class, Links::class, User::class, Post::class, UserResponse::class, Photo::class, Link::class, Meta::class], version = 1)
 public abstract class MyRoomDatabase : RoomDatabase() {
