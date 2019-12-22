@@ -3,10 +3,12 @@ package com.motiv.piotr;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.BottomnavigationactivityBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -15,6 +17,7 @@ import javax.inject.*;
 public class BottomNavigationActivity extends AppCompatActivity
         implements HasSupportFragmentInjector {
 
+    private BottomnavigationactivityBinding bottomnavigationactivityBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
@@ -38,7 +41,8 @@ public class BottomNavigationActivity extends AppCompatActivity
 
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bottomnavigationactivity);
+        bottomnavigationactivityBinding =
+                DataBindingUtil.setContentView(this, R.layout.bottomnavigationactivity);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -47,8 +51,8 @@ public class BottomNavigationActivity extends AppCompatActivity
                 new FragmentsPagerAdapter(
                         BottomNavigationActivity.this.getSupportFragmentManager());
         navigationController = new NavigationController(BottomNavigationActivity.this);
-        relativelayout00 = (RelativeLayout) findViewById(R.id.relativelayout00);
-        bottomnavigationview11 = (BottomNavigationView) findViewById(R.id.bottomnavigationview11);
+        relativelayout00 = bottomnavigationactivityBinding.relativelayout00;
+        bottomnavigationview11 = bottomnavigationactivityBinding.bottomnavigationview11;
 
         bottomnavigationview11.setOnNavigationItemSelectedListener(
                 new com.google.android.material.bottomnavigation.BottomNavigationView

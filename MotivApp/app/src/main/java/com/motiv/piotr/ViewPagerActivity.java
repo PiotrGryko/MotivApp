@@ -3,11 +3,13 @@ package com.motiv.piotr;
 import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.*;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.ViewpageractivityBinding;
 import dagger.*;
 import dagger.android.*;
 import dagger.android.support.*;
@@ -15,6 +17,7 @@ import javax.inject.*;
 
 public class ViewPagerActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
+    private ViewpageractivityBinding viewpageractivityBinding;
     @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
@@ -39,7 +42,7 @@ public class ViewPagerActivity extends AppCompatActivity implements HasSupportFr
 
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.viewpageractivity);
+        viewpageractivityBinding = DataBindingUtil.setContentView(this, R.layout.viewpageractivity);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -47,9 +50,9 @@ public class ViewPagerActivity extends AppCompatActivity implements HasSupportFr
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(ViewPagerActivity.this.getSupportFragmentManager());
         navigationController = new NavigationController(ViewPagerActivity.this);
-        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
-        tablayout10 = (TabLayout) findViewById(R.id.tablayout10);
-        viewpager11 = (ViewPager) findViewById(R.id.viewpager11);
+        linearlayout00 = viewpageractivityBinding.linearlayout00;
+        tablayout10 = viewpageractivityBinding.tablayout10;
+        viewpager11 = viewpageractivityBinding.viewpager11;
 
         viewpager11.setAdapter(fragmentsPagerAdapter);
     }
