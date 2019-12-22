@@ -3,13 +3,16 @@ package com.motiv.piotr;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.DaoRepositoryFactory;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.BottomnavigationactivityBinding;
 
 public class BottomNavigationActivity extends AppCompatActivity {
 
+    private BottomnavigationactivityBinding bottomnavigationactivityBinding;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
     private PhotosPagerAdapter photosPagerAdapter;
@@ -25,7 +28,8 @@ public class BottomNavigationActivity extends AppCompatActivity {
     protected void onCreate(@Nullable android.os.Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bottomnavigationactivity);
+        bottomnavigationactivityBinding =
+                DataBindingUtil.setContentView(this, R.layout.bottomnavigationactivity);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -37,8 +41,8 @@ public class BottomNavigationActivity extends AppCompatActivity {
         localStorage = LocalStorage.getInstance(BottomNavigationActivity.this);
         navigationController = new NavigationController(BottomNavigationActivity.this);
         goRestApi = GoRestApiFactory.getInstance(localStorage);
-        relativelayout00 = (RelativeLayout) findViewById(R.id.relativelayout00);
-        bottomnavigationview11 = (BottomNavigationView) findViewById(R.id.bottomnavigationview11);
+        relativelayout00 = bottomnavigationactivityBinding.relativelayout00;
+        bottomnavigationview11 = bottomnavigationactivityBinding.bottomnavigationview11;
 
         bottomnavigationview11.setOnNavigationItemSelectedListener(
                 new com.google.android.material.bottomnavigation.BottomNavigationView

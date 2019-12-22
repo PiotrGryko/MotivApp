@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.DaoRepositoryFactory;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.UserslistfragmentBinding;
 
 public class UsersListFragment extends Fragment {
 
+    private UserslistfragmentBinding userslistfragmentBinding;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
     private PhotosPagerAdapter photosPagerAdapter;
@@ -32,7 +34,7 @@ public class UsersListFragment extends Fragment {
             @Nullable ViewGroup parent,
             @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.userslistfragment, parent, false);
+        userslistfragmentBinding = UserslistfragmentBinding.inflate(inflater);
 
         usersListAdapter = new UsersListAdapter();
         postsListAdapter = new PostsListAdapter();
@@ -44,8 +46,8 @@ public class UsersListFragment extends Fragment {
         localStorage = LocalStorage.getInstance(UsersListFragment.this.getActivity());
         navigationController = new NavigationController(UsersListFragment.this.getActivity());
         goRestApi = GoRestApiFactory.getInstance(localStorage);
-        linearlayout00 = (LinearLayout) v.findViewById(R.id.linearlayout00);
-        recyclerview10 = (RecyclerView) v.findViewById(R.id.recyclerview10);
+        linearlayout00 = userslistfragmentBinding.linearlayout00;
+        recyclerview10 = userslistfragmentBinding.recyclerview10;
 
         recyclerview10.setLayoutManager(
                 new LinearLayoutManager(UsersListFragment.this.getActivity()));
@@ -70,6 +72,6 @@ public class UsersListFragment extends Fragment {
                     }
                 });
 
-        return v;
+        return userslistfragmentBinding.getRoot();
     }
 }
