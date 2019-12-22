@@ -1,31 +1,29 @@
  
 package com.motiv.piotr
-import android.widget.ImageView
 import androidx.annotation.NonNull
-import androidx.databinding.BindingAdapter
-import androidx.room.*
+import androidx.fragment.app.*
 import com.google.gson.*
 import com.google.gson.annotations.*
 import com.google.gson.reflect.*
-import com.squareup.picasso.Picasso
+import dagger.*
+import dagger.android.*
+import dagger.android.support.*
+import io.realm.*
 import java.util.*
 import java.util.concurrent.*
+import javax.inject.*
 import kotlin.collections.List
-@Entity(tableName = "userslistresponse")
-public class UsersListResponse {
 
-    @NonNull
-    @PrimaryKey
+public open class UsersListResponse : RealmObject() {
 
-    private var id: String = UUID.randomUUID().toString()
-    @ColumnInfo(name = "metaId")@ForeignKey(entity = com.motiv.piotr.Meta::class, parentColumns = ["id"], childColumns = ["metaId"])
-    private
-    var metaId: String = ""
-    @Ignore
+    @NonNull private var id: String = UUID.randomUUID().toString()
+
     @SerializedName("result")
-    private var result: List<com.motiv.piotr.User> = listOf()
-    @Ignore
+
+    private var result: RealmList<com.motiv.piotr.User> = RealmList()
+
     @SerializedName("_meta")
+
     private var meta: com.motiv.piotr.Meta = com.motiv.piotr.Meta()
 
     fun getId(): String {
@@ -34,15 +32,12 @@ public class UsersListResponse {
         this.id = id
     } fun getResult(): List<com.motiv.piotr.User> {
         return this.result
-    } fun setResult(result: List<com.motiv.piotr.User>) {
+    } fun setResult(result: RealmList<com.motiv.piotr.User>) {
         this.result = result
     } fun getMeta(): com.motiv.piotr.Meta {
         return this.meta
     } fun setMeta(meta: com.motiv.piotr.Meta) {
         this.meta = meta
-    } @BindingAdapter("bind:imageUrl")
-    fun loadImage(view: ImageView, url: String) {
-        Picasso.with(view.getContext()).load(url).into(view)
     } companion object {
         val gson: Gson = Gson()
         fun fromJson(json: String): UsersListResponse {
@@ -60,5 +55,5 @@ public class UsersListResponse {
         fun fromJsonArray(json: String): Array<UsersListResponse> {
             return gson.fromJson(json, Array<UsersListResponse>::class.java)
         }
-    } public fun getMetaId(): String { return this.metaId; }; public fun setMetaId(metaId: String) { this.metaId = metaId; }
+    }
 }

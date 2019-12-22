@@ -3,17 +3,22 @@ package com.motiv.piotr
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.motiv.piotr.dao.DaoRepository
-import com.motiv.piotr.dao.DaoRepositoryFactory
 import com.motiv.piotr.dao.LocalStorage
-import com.motiv.piotr.databinding.BottomnavigationactivityBinding
+import dagger.*
+import dagger.android.*
+import dagger.android.support.*
+import javax.inject.*
 import kotlinx.android.synthetic.main.bottomnavigationactivity.*
 
-public class BottomNavigationActivity : AppCompatActivity() {
+public class BottomNavigationActivity : AppCompatActivity(), BottomNavigationActivityContract.View, HasSupportFragmentInjector {
 
-    private lateinit var bottomnavigationactivityBinding: BottomnavigationactivityBinding
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    private lateinit var presenter: BottomNavigationActivityContract.Presenter
 
     private lateinit var usersListAdapter: UsersListAdapter
 
@@ -23,11 +28,14 @@ public class BottomNavigationActivity : AppCompatActivity() {
 
     private lateinit var fragmentsPagerAdapter: FragmentsPagerAdapter
 
-    private lateinit var goRestApi: GoRestApi
+    @Inject
+    lateinit var goRestApi: GoRestApi
 
-    private lateinit var daoRepository: DaoRepository
+    @Inject
+    lateinit var daoRepository: DaoRepository
 
-    private lateinit var localStorage: LocalStorage
+    @Inject
+    lateinit var localStorage: LocalStorage
 
     private lateinit var navigationController: NavigationController
 
@@ -35,27 +43,31 @@ public class BottomNavigationActivity : AppCompatActivity() {
 
     private lateinit var bottomnavigationview11: BottomNavigationView
 
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return dispatchingAndroidInjector
+    } override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        bottomnavigationactivityBinding = DataBindingUtil.setContentView(this, R.layout.bottomnavigationactivity)
+        setContentView(R.layout.bottomnavigationactivity)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(this@BottomNavigationActivity.getSupportFragmentManager())
-        daoRepository = DaoRepositoryFactory.getInstance(this@BottomNavigationActivity)
-        localStorage = LocalStorage.getInstance(this@BottomNavigationActivity)
         navigationController = NavigationController(this@BottomNavigationActivity)
-        goRestApi = GoRestApiFactory.getInstance(localStorage)
-        relativelayout00 = bottomnavigationactivityBinding.relativelayout00
-        bottomnavigationview11 = bottomnavigationactivityBinding.bottomnavigationview11
+        relativelayout00 = findViewById<RelativeLayout>(R.id.relativelayout00)
+        bottomnavigationview11 = findViewById<BottomNavigationView>(R.id.bottomnavigationview11)
+
+        presenter = BottomNavigationActivityPresenter(this@BottomNavigationActivity, goRestApi, daoRepository, localStorage)
 
         bottomnavigationview11.setOnNavigationItemSelectedListener(object : com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener {
             override fun onNavigationItemSelected(argument0: android.view.MenuItem): Boolean {
-                navigationController.startDestinationById(argument0.getItemId())
+                presenter.eloonNavigationItemSelected(argument0)
 
                 return false
             } 
         })
+    } override fun navigationControllerstartDestinationById(arg0: Int) {
+        navigationController.startDestinationById(arg0)
     }
 }

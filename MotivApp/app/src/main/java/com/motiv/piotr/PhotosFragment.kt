@@ -9,14 +9,20 @@ import androidx.fragment.app.*
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.motiv.piotr.dao.DaoRepository
-import com.motiv.piotr.dao.DaoRepositoryFactory
 import com.motiv.piotr.dao.LocalStorage
-import com.motiv.piotr.databinding.PhotosfragmentBinding
+import dagger.*
+import dagger.android.*
+import dagger.android.support.*
+import javax.inject.*
+import kotlin.collections.List
 import kotlinx.android.synthetic.main.photosfragment.*
 
-public class PhotosFragment : Fragment() {
+public class PhotosFragment : Fragment(), PhotosFragmentContract.View {
 
-    private lateinit var photosfragmentBinding: PhotosfragmentBinding
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
+
+    private lateinit var presenter: PhotosFragmentContract.Presenter
 
     private lateinit var usersListAdapter: UsersListAdapter
 
@@ -26,11 +32,14 @@ public class PhotosFragment : Fragment() {
 
     private lateinit var fragmentsPagerAdapter: FragmentsPagerAdapter
 
-    private lateinit var goRestApi: GoRestApi
+    @Inject
+    lateinit var goRestApi: GoRestApi
 
-    private lateinit var daoRepository: DaoRepository
+    @Inject
+    lateinit var daoRepository: DaoRepository
 
-    private lateinit var localStorage: LocalStorage
+    @Inject
+    lateinit var localStorage: LocalStorage
 
     private lateinit var navigationController: NavigationController
 
@@ -41,28 +50,26 @@ public class PhotosFragment : Fragment() {
     private lateinit var viewpager11: ViewPager
 
     override fun onCreateView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
-        photosfragmentBinding = PhotosfragmentBinding.inflate(inflater)
+        val v: View = inflater.inflate(R.layout.photosfragment, parent, false)
 
         usersListAdapter = UsersListAdapter()
         postsListAdapter = PostsListAdapter()
         photosPagerAdapter = PhotosPagerAdapter()
         fragmentsPagerAdapter = FragmentsPagerAdapter(activity!!.getSupportFragmentManager())
-        daoRepository = DaoRepositoryFactory.getInstance(activity!!)
-        localStorage = LocalStorage.getInstance(activity!!)
         navigationController = NavigationController(activity!!)
-        goRestApi = GoRestApiFactory.getInstance(localStorage)
-        linearlayout00 = photosfragmentBinding.linearlayout00
-        tablayout10 = photosfragmentBinding.tablayout10
-        viewpager11 = photosfragmentBinding.viewpager11
+        linearlayout00 = v.findViewById<LinearLayout>(R.id.linearlayout00)
+        tablayout10 = v.findViewById<TabLayout>(R.id.tablayout10)
+        viewpager11 = v.findViewById<ViewPager>(R.id.viewpager11)
+        presenter = PhotosFragmentPresenter(this@PhotosFragment, goRestApi, daoRepository, localStorage)
 
         viewpager11.setAdapter(photosPagerAdapter)
-        goRestApi.getPhotosList(object : com.motiv.piotr.OnResponseListener<com.motiv.piotr.PhotosListResponse> {
-            override fun onSuccess(argument0: com.motiv.piotr.PhotosListResponse) {
-                photosPagerAdapter.setData(argument0.getResult())
-            } override fun onError(argument0: Exception) {
-            } 
-        })
+        presenter.goRestApigetPhotosList()
 
-        return photosfragmentBinding.getRoot()
+        return v
+    } override fun photosPagerAdaptersetData(arg0: List<com.motiv.piotr.Photo>) {
+        photosPagerAdapter.setData(arg0)
+    } override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AndroidSupportInjection.inject(this)
     }
 }
