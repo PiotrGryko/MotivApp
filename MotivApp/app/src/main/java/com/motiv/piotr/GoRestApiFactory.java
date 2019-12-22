@@ -1,20 +1,10 @@
-package com.motiv.piotr.di;
+package com.motiv.piotr;
 
-import android.app.Application;
-import androidx.fragment.app.*;
 import com.google.gson.*;
 import com.google.gson.annotations.*;
 import com.google.gson.reflect.*;
-import com.motiv.piotr.GoRestApi;
-import com.motiv.piotr.GoRestApiApi;
-import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
-import dagger.*;
-import dagger.android.*;
-import dagger.android.support.*;
-import io.realm.*;
 import java.io.*;
-import javax.inject.*;
 import okhttp3.*;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -22,25 +12,13 @@ import retrofit2.*;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
 
-@Module
-public class AppModule {
+public class GoRestApiFactory {
 
-    private Application application;
+    private GoRestApiApi goRestApiApi;
+    private static GoRestApi goRestApi;
+    private static GoRestApiFactory instance;
 
-    public AppModule(Application application) {
-        this.application = application;
-    }
-
-    @Provides
-    @Singleton
-    public LocalStorage getLocalStorage() {
-
-        return new LocalStorage(application);
-    }
-
-    @Provides
-    @Singleton
-    public GoRestApiApi getGoRestApiApi(final LocalStorage localStorage) {
+    private GoRestApiFactory(final LocalStorage localStorage) {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -69,29 +47,14 @@ public class AppModule {
                         .baseUrl("https://gorest.co.in/public-api/")
                         .addConverterFactory(GsonConverterFactory.create(gson))
                         .build();
-        GoRestApiApi goRestApiApi = retrofit.create(GoRestApiApi.class);
-
-        return goRestApiApi;
+        goRestApiApi = retrofit.create(GoRestApiApi.class);
+        goRestApi = new GoRestApi(goRestApiApi);
     }
 
-    @Provides
-    @Singleton
-    public GoRestApi getGoRestApi(GoRestApiApi goRestApiApi) {
-        GoRestApi goRestApi = new GoRestApi(goRestApiApi);
-        return goRestApi;
-    }
-
-    @Provides
-    @Singleton
-    public Realm provideRealmDatabase() {
-
-        return Realm.getDefaultInstance();
-    }
-
-    @Provides
-    @Singleton
-    public DaoRepository getDaoRepository(Realm myDatabase) {
-
-        return new DaoRepository(myDatabase);
+    public static GoRestApi getInstance(LocalStorage localStorage) {
+        if (instance == null) {
+            instance = new GoRestApiFactory(localStorage);
+        }
+        return instance.goRestApi;
     }
 }
