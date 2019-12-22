@@ -1,7 +1,10 @@
  
 package com.motiv.piotr
+import android.widget.ImageView
 import androidx.annotation.NonNull
+import androidx.databinding.BindingAdapter
 import androidx.fragment.app.*
+import com.bumptech.glide.Glide
 import com.google.gson.*
 import com.google.gson.annotations.*
 import com.google.gson.reflect.*
@@ -37,6 +40,11 @@ public open class UserResponse : RealmObject() {
         return this.meta
     } fun setMeta(meta: com.motiv.piotr.Meta) {
         this.meta = meta
+    } @BindingAdapter("bind:imageUrl")
+    fun loadImage(view: ImageView, url: String) {
+        Glide.with(view.getContext())
+            .load(url)
+            .into(view)
     } companion object {
         val gson: Gson = Gson()
         fun fromJson(json: String): UserResponse {
