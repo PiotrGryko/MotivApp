@@ -5,13 +5,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
+import com.motiv.piotr.databinding.UserdetailactivityBinding;
 import com.squareup.picasso.Picasso;
 
 public class UserDetailActivity extends AppCompatActivity
         implements UserDetailActivityContract.View {
 
+    private UserdetailactivityBinding userdetailactivityBinding;
     private com.motiv.piotr.User user;
     private UserDetailActivityContract.Presenter presenter;
     private UsersListAdapter usersListAdapter;
@@ -30,7 +33,8 @@ public class UserDetailActivity extends AppCompatActivity
     protected void onCreate(@Nullable android.os.Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.userdetailactivity);
+        userdetailactivityBinding =
+                DataBindingUtil.setContentView(this, R.layout.userdetailactivity);
 
         user = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("user"));
 
@@ -42,9 +46,9 @@ public class UserDetailActivity extends AppCompatActivity
         localStorage = LocalStorage.getInstance(UserDetailActivity.this);
         navigationController = new NavigationController(UserDetailActivity.this);
         goRestApi = GoRestApiFactory.getInstance(localStorage);
-        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
-        imageview10 = (ImageView) findViewById(R.id.imageview10);
-        textview11 = (TextView) findViewById(R.id.textview11);
+        linearlayout00 = userdetailactivityBinding.linearlayout00;
+        imageview10 = userdetailactivityBinding.imageview10;
+        textview11 = userdetailactivityBinding.textview11;
 
         presenter =
                 new UserDetailActivityPresenter(
