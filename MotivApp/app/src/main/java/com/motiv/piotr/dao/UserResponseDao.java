@@ -1,12 +1,7 @@
 package com.motiv.piotr.dao;
 
-import androidx.fragment.app.*;
 import androidx.room.*;
 import com.motiv.piotr.UserResponseWithReferences;
-import dagger.*;
-import dagger.android.*;
-import dagger.android.support.*;
-import javax.inject.*;
 
 @Dao
 public interface UserResponseDao {
