@@ -5,34 +5,43 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.*;
+import com.bumptech.glide.Glide;
 import com.motiv.piotr.dao.DaoRepository;
 import com.motiv.piotr.dao.LocalStorage;
-import com.motiv.piotr.databinding.UserdetailactivityBinding;
-import com.squareup.picasso.Picasso;
+import dagger.*;
+import dagger.android.*;
+import dagger.android.support.*;
+import javax.inject.*;
 
-public class UserDetailActivity extends AppCompatActivity {
+public class UserDetailActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
-    private UserdetailactivityBinding userdetailactivityBinding;
+    @Inject DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     private com.motiv.piotr.User user;
     private UsersListAdapter usersListAdapter;
     private PostsListAdapter postsListAdapter;
     private PhotosPagerAdapter photosPagerAdapter;
     private FragmentsPagerAdapter fragmentsPagerAdapter;
-    private GoRestApi goRestApi;
-    private DaoRepository daoRepository = DaoRepositoryFactory.getInstance(UserDetailActivity.this);
-    private LocalStorage localStorage;
+    @Inject GoRestApi goRestApi;
+    @Inject DaoRepository daoRepository;
+    @Inject LocalStorage localStorage;
     private NavigationController navigationController;
     private LinearLayout linearlayout00;
     private ImageView imageview10;
     private TextView textview11;
 
     @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+
+        return dispatchingAndroidInjector;
+    }
+
+    @Override
     protected void onCreate(@Nullable android.os.Bundle savedInstanceState) {
 
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        userdetailactivityBinding =
-                DataBindingUtil.setContentView(this, R.layout.userdetailactivity);
+        setContentView(R.layout.userdetailactivity);
 
         user = com.motiv.piotr.User.fromJson(getIntent().getStringExtra("user"));
 
@@ -41,14 +50,12 @@ public class UserDetailActivity extends AppCompatActivity {
         photosPagerAdapter = new PhotosPagerAdapter();
         fragmentsPagerAdapter =
                 new FragmentsPagerAdapter(UserDetailActivity.this.getSupportFragmentManager());
-        localStorage = LocalStorage.getInstance(UserDetailActivity.this);
         navigationController = new NavigationController(UserDetailActivity.this);
-        goRestApi = GoRestApiFactory.getInstance(localStorage);
-        linearlayout00 = userdetailactivityBinding.linearlayout00;
-        imageview10 = userdetailactivityBinding.imageview10;
-        textview11 = userdetailactivityBinding.textview11;
+        linearlayout00 = (LinearLayout) findViewById(R.id.linearlayout00);
+        imageview10 = (ImageView) findViewById(R.id.imageview10);
+        textview11 = (TextView) findViewById(R.id.textview11);
 
-        Picasso.with(UserDetailActivity.this)
+        Glide.with(UserDetailActivity.this)
                 .load(user.getLinks().getAvatar().getHref())
                 .into(imageview10);
         ;
