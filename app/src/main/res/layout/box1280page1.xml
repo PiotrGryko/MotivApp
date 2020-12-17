@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/constraintlayout00">
+    <android.widget.ImageView
+        android:layout_height="0dip"
+        android:layout_width="0dip"
+        android:src="@drawable/eeceeebdacbd"
+        android:scaleType="fitXY"
+        android:id="@+id/box1289"
+        app:layout_constraintLeft_toLeftOf="@id/guidelineVertical003"
+        app:layout_constraintRight_toRightOf="@id/guidelineVertical097"
+        app:layout_constraintTop_toTopOf="@id/guidelineHorizontal002"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineHorizontal097">
+    </android.widget.ImageView>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/guidelineVertical097"
+        app:layout_constraintGuide_percent="0.97">
+    </androidx.constraintlayout.widget.Guideline>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/guidelineVertical003"
+        app:layout_constraintGuide_percent="0.03">
+    </androidx.constraintlayout.widget.Guideline>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/guidelineHorizontal097"
+        app:layout_constraintGuide_percent="0.97">
+    </androidx.constraintlayout.widget.Guideline>
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/guidelineHorizontal002"
+        app:layout_constraintGuide_percent="0.02">
+    </androidx.constraintlayout.widget.Guideline>
+</androidx.constraintlayout.widget.ConstraintLayout>
